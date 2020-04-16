@@ -47,7 +47,6 @@ abstract class AbstractBuilder
 
         // Prepare the underlying query builder
         $this->query = new QueryBuilder();
-        $this->query->addFilter($this->filter);
     }
 
     abstract protected function createIndex(): AbstractElasticIndex;
@@ -72,6 +71,11 @@ abstract class AbstractBuilder
 
         if (null !== $this->select) {
             $this->query->setSource($this->select);
+        }
+
+        // Add filter only if it contains any filters.
+        if (false === $this->filter->isEmpty()) {
+            $this->query->addFilter($this->filter);
         }
 
         // Build the query and improve it

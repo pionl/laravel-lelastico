@@ -23,9 +23,9 @@ trait ParseResultsFromHits
      *
      * @param array $result
      *
-     * @return array
+     * @return array|mixed
      */
-    protected function getSourceItem(array $result): array
+    protected function getSourceItem(array $result)
     {
         return $result['_source'];
     }
