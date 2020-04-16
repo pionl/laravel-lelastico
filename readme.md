@@ -19,7 +19,7 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 **1. Install via composer**
 
 ```
-composer require pion/laravel-elastico
+composer require pion/laravel-lelastico
 ```
     
 **2. Add the service provider (Laravel 5.4 and below - supports Auto discovery)**
