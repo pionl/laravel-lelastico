@@ -1,0 +1,42 @@
+{
+  "name": "pion/laravel-lelastico",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Martin Kluska",
+      "email": "martin@kluska.cz"
+    }
+  ],
+  "require": {
+    "illuminate/support": ">=5.5",
+    "elasticsearch/elasticsearch": "^7",
+    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#b0ddd4f6fe59cdf5b4288ea39f6fe089b596c7a0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "overtrue/phplint": "^1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lelastico\\": "src/"
+    }
+  },
+  "scripts": {
+    "lint:fix": "./vendor/bin/php-cs-fixer fix --config=.php_cs --using-cache false",
+    "lint:check": "./vendor/bin/phplint",
+    "lint": "composer run-script lint:fix && composer run-script lint:check"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "\\Lelastico\\LelasticoServiceProvider"
+      ]
+    }
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/pionl/elasticsearch-query-builder.git"
+    }
+  ]
+}
