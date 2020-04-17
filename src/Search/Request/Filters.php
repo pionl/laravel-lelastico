@@ -2,6 +2,8 @@
 
 namespace Lelastico\Search\Request;
 
+use Erichard\ElasticQueryBuilder\Filter\MatchFilter;
+use Erichard\ElasticQueryBuilder\Filter\TermFilter;
 use Illuminate\Http\Request;
 use Lelastico\Search\Query\AbstractBuilder;
 
@@ -40,6 +42,24 @@ class Filters
         $this->filters[] = $filter;
 
         return $this;
+    }
+
+    /**
+     * Creates RequestQueryFilter from the array and adds them as filter. Each $createQueryFilters is keyed by the
+     * request key (value is in the same format as $createQueryFilters parameter in RequestQueryFilter construct).
+     *
+     * @param array $requestQueryFilterMap example: $this->addQueryFilters([
+     *                                     'citizen_of' => TermFilter::class,
+     *                                     'phone' => [MatchFilter::class, 'phones'],
+     *                                     'is_verified' => TermFilter::class,
+     *                                     ]);
+     * @param bool  $scoring               Does filter counts to scoring?
+     */
+    public function addQueryFilters(array $requestQueryFilterMap, bool $scoring = false)
+    {
+        foreach ($requestQueryFilterMap as $requestKey => $createQueryFilters) {
+            $this->addFilter(new RequestQueryFilter($this->request, $requestKey, $createQueryFilters, $scoring));
+        }
     }
 
     /**
