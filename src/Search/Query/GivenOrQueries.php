@@ -16,10 +16,12 @@ class GivenOrQueries extends AbstractQuery
 
     /**
      * @param array|AbstractQuery[] $queries List of queries that will be grouped into should filter
+     * @param bool                  $scoring Does filters counts to scoring?
      */
-    public function __construct(array $queries)
+    public function __construct(array $queries, bool $scoring = false)
     {
         $this->queries = $queries;
+        $this->scoring = $scoring;
     }
 
     public function createFilters(): array

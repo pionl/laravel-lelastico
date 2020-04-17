@@ -13,10 +13,12 @@ class GivenFilters extends AbstractQuery
 
     /**
      * @param array|Filter[] $filters
+     * @param bool           $scoring Does filters counts to scoring?
      */
-    public function __construct(array $filters)
+    public function __construct(array $filters, bool $scoring = false)
     {
         $this->filters = $filters;
+        $this->scoring = $scoring;
     }
 
     public function createFilters(): array

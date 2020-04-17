@@ -16,7 +16,10 @@ trait AddQueries
     protected $filter;
 
     /**
-     * Add queries from given filters.
+     * Add queries from given filters. Allows to create pass fresh filters instance like:
+     * (new MyBuilder())
+     *      ->addQueriesFromFilters(new MyFilters())
+     *      ->paginate().
      *
      * @param Filters $filters
      *
@@ -31,7 +34,7 @@ trait AddQueries
     }
 
     /**
-     * Adds query filters to the elastic query builder.
+     * Adds query filters to the elastic query builder using addMust (if $query->scoring is true) or addFilter.
      *
      * @param AbstractQuery $query
      *
@@ -40,23 +43,11 @@ trait AddQueries
     public function addQuery(AbstractQuery $query): self
     {
         foreach ($query->createFilters() as $filter) {
-            $this->filter->addFilter($filter);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Adds query must filters (used for scoring) to the elastic query builder.
-     *
-     * @param AbstractQuery $query
-     *
-     * @return $this
-     */
-    public function addMustQuery(AbstractQuery $query)
-    {
-        foreach ($query->createFilters() as $filter) {
-            $this->filter->addMust($filter);
+            if ($query->scoring) {
+                $this->filter->addMust($filter);
+            } else {
+                $this->filter->addFilter($filter);
+            }
         }
 
         return $this;
