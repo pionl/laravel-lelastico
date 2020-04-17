@@ -1,10 +1,9 @@
 # Lelastico - easier elastic search for Laravel
 
-[![Total Downloads](https://poser.pugx.org/pion/laravel-elastico/downloads?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
-[![Build Status](https://travis-ci.org/pionl/laravel-elastico.svg?branch=master)](https://travis-ci.org/pionl/laravel-elastico)
-[![Latest Stable Version](https://poser.pugx.org/pion/laravel-elastico/v/stable?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
-[![Latest Unstable Version](https://poser.pugx.org/pion/laravel-elastico/v/unstable?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
-[![License](https://poser.pugx.org/pion/laravel-elastico/license)](https://packagist.org/packages/pion/laravel-elastico)
+[![Total Downloads](https://poser.pugx.org/pion/laravel-lelastico/downloads?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
+[![Latest Stable Version](https://poser.pugx.org/pion/laravel-lelastico/v/stable?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
+[![Latest Unstable Version](https://poser.pugx.org/pion/laravel-lelastico/v/unstable?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
+[![License](https://poser.pugx.org/pion/laravel-lelastico/license)](https://packagist.org/packages/pion/laravel-lelastico)
 
 ## Introduction
 
