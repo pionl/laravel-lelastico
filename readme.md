@@ -15,19 +15,30 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 
 ## Installation
 
-**1. Install via composer**
+**1. Add custom repository to composer.json**
+
+```
+"repositories": {
+	{
+    "type": "git",
+    "url": "https://github.com/pionl/elasticsearch-query-builder.git"
+	}
+}
+```
+
+**2. Install via composer**
 
 ```
 composer require pion/laravel-lelastico
 ```
     
-**2. Add the service provider (Laravel 5.4 and below - supports Auto discovery)**
+**3. Add the service provider (Laravel 5.4 and below - supports Auto discovery)**
 
 ```php
 \Lelastico\LelasticoServiceProvider::class,
 ```    
 
-**3. Publish the config (Laravel 5.2 and above, optional)**
+**4. Publish the config (Laravel 5.2 and above, optional)**
 
 ```
 php artisan vendor:publish --provider="\Lelastico\LelasticoServiceProvider"
