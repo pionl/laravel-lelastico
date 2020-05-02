@@ -139,6 +139,8 @@ Property mappings types using constants like:
             --only="only", handle only given index
             --f, will delete the index and data. Will new index with mappings
             --d, will delete the index and data
+            --skip-settings-update, when upadting, the index is closed / opened due the settings update. You can skip it
+            by provided this option.
     ```
 
 ## TODO
