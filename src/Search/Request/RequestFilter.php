@@ -35,9 +35,21 @@ class RequestFilter extends AbstractFilter
      */
     public function __construct(Request $request, string $requestKey, $queryClass)
     {
-        $this->value = $request->get($requestKey);
+        $this->value = $this->convertValue($request->get($requestKey));
         $this->requestKey = $requestKey;
         $this->queryClass = $queryClass;
+    }
+
+    /**
+     * Adds ability to change the value type.
+     *
+     * @param mixed|null $value Value from request
+     *
+     * @return mixed|null
+     */
+    protected function convertValue($value)
+    {
+        return $value;
     }
 
     public function createQuery(): AbstractQuery
