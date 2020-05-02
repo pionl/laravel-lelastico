@@ -12,7 +12,7 @@ trait LogQuery
      */
     protected function logQuery(array $result, array $query)
     {
-        if (false === config('lelastico.debugbar_measurenemnts')) {
+        if (false === config('lelastico.debugbar_log')) {
             return;
         }
 

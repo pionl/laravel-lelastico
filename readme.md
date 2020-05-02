@@ -19,10 +19,10 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 
 ```
 "repositories": {
-	{
-    "type": "git",
-    "url": "https://github.com/pionl/elasticsearch-query-builder.git"
-	}
+    {
+        "type": "git",
+        "url": "https://github.com/pionl/elasticsearch-query-builder.git"
+    }
 }
 ```
 
@@ -37,12 +37,6 @@ composer require pion/laravel-lelastico
 ```php
 \Lelastico\LelasticoServiceProvider::class,
 ```    
-
-**4. Publish the config (Laravel 5.2 and above, optional)**
-
-```
-php artisan vendor:publish --provider="\Lelastico\LelasticoServiceProvider"
-```
 
 ## Dependencies
 
@@ -138,7 +132,7 @@ Property mappings types using constants like:
         ],
     ];
     ```
-3. Update or create indices in elastic (stores settings / mapping) using `php artisan elastic:indecies`
+3. Update or create indices in elastic (stores settings / mapping) using `php artisan elastic:indices`
 
     ```
     Updates the elastic indices
