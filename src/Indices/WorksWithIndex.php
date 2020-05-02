@@ -60,7 +60,7 @@ trait WorksWithIndex
     /**
      * Update mappings (if contains) and settings.
      */
-    public function update()
+    public function update(bool $skipSettingsUpdate = false)
     {
         // Update mapping
         $properties = $this->propertyMappings();
@@ -73,13 +73,27 @@ trait WorksWithIndex
             ]);
         }
 
-        // Update settings
-        $settings = $this->settings();
-        if (!empty($settings)) {
-            $this->client->indices()->putSettings([
-                'index' => $this->name,
-                'body' => $settings,
-            ]);
+        // For quick updates we do not need to update settings.
+        if (false === $skipSettingsUpdate) {
+            // Update settings
+            $settings = $this->settings();
+            if (!empty($settings)) {
+                // We need to close the index before we can update settings
+                $this->client->indices()->close([
+                    'index' => $this->name,
+                ]);
+
+                // Update the settings
+                $this->client->indices()->putSettings([
+                    'index' => $this->name,
+                    'body' => $settings,
+                ]);
+
+                // Open the index
+                $this->client->indices()->open([
+                    'index' => $this->name,
+                ]);
+            }
         }
     }
 

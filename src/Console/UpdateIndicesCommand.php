@@ -14,7 +14,7 @@ class UpdateIndicesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'elastic:indices {--only=} {--f} {--d}';
+    protected $signature = 'elastic:indices {--only=} {--f} {--d} {--skip-settings-update}';
 
     /**
      * The console command description.
@@ -24,7 +24,9 @@ class UpdateIndicesCommand extends Command
     protected $description = 'Updates the elastic indices
         --only="only", handle only given index
         --f, will delete the index and data. Will new index with mappings
-        --d, will delete the index and data';
+        --d, will delete the index and data
+        --skip-settings-update, when upadting, the index is closed / opened due the settings update. You can skip it
+        by provided this option.';
 
     /**
      * Execute the console command.
@@ -78,8 +80,7 @@ class UpdateIndicesCommand extends Command
             // Create index or update mappings
             if ($exists) {
                 $this->line('   Updating mappings');
-
-                $index->update();
+                $index->update(true === $this->option('skip-settings-update'));
             } else {
                 $this->line('   Creating index with mappings');
 
