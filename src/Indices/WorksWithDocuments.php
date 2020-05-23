@@ -28,14 +28,23 @@ trait WorksWithDocuments
     /**
      * Creates a document.
      *
+     * $options['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the index operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+     * $options['refresh']                = (enum) If `true` then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+     * $options['routing']                = (string) Specific routing value
+     * $options['timeout']                = (time) Explicit operation timeout
+     * $options['version']                = (number) Explicit version number for concurrency control
+     * $options['version_type']           = (enum) Specific version type (Options = internal,external,external_gte)
+     * $options['pipeline']               = (string) The pipeline id to preprocess incoming documents with
+     *
      * @param int   $id
      * @param array $document
+     * @param array $options
      *
      * @return array|callable
      */
-    public function createDocument(int $id, array $document)
+    public function createDocument(int $id, array $document, array $options = [])
     {
-        return $this->client->create([
+        return $this->client->create($options + [
             'body' => $document,
             'index' => $this->name,
             'id' => $id,
@@ -45,14 +54,23 @@ trait WorksWithDocuments
     /**
      * Updates given document.
      *
+     * $options['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the index operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+     * $options['refresh']                = (enum) If `true` then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+     * $options['routing']                = (string) Specific routing value
+     * $options['timeout']                = (time) Explicit operation timeout
+     * $options['version']                = (number) Explicit version number for concurrency control
+     * $options['version_type']           = (enum) Specific version type (Options = internal,external,external_gte)
+     * $options['pipeline']               = (string) The pipeline id to preprocess incoming documents with
+     *
      * @param int   $id
      * @param array $document
+     * @param array $options
      *
      * @return array|callable
      */
-    public function updateDocument(int $id, array $document)
+    public function updateDocument(int $id, array $document, array $options = [])
     {
-        return $this->client->update([
+        return $this->client->update($options + [
             'body' => ['doc' => $document],
             'index' => $this->name,
             'id' => $id,
@@ -62,21 +80,30 @@ trait WorksWithDocuments
     /**
      * Creates or updates given document.
      *
+     * $options['wait_for_active_shards'] = (string) Sets the number of shard copies that must be active before proceeding with the index operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+     * $options['refresh']                = (enum) If `true` then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+     * $options['routing']                = (string) Specific routing value
+     * $options['timeout']                = (time) Explicit operation timeout
+     * $options['version']                = (number) Explicit version number for concurrency control
+     * $options['version_type']           = (enum) Specific version type (Options = internal,external,external_gte)
+     * $options['pipeline']               = (string) The pipeline id to preprocess incoming documents with
+     *
      * @param int   $id
      * @param array $document
+     * @param array $options
      *
      * @return array|callable
      */
-    public function createOrUpdateDocument(int $id, array $document)
+    public function createOrUpdateDocument(int $id, array $document, array $options = [])
     {
         if ($this->client->exists([
             'index' => $this->name,
             'id' => $id,
         ])) {
-            return $this->updateDocument($id, $document);
+            return $this->updateDocument($id, $document, $options);
         }
 
-        return $this->createDocument($id, $document);
+        return $this->createDocument($id, $document, $options);
     }
 
     /**
