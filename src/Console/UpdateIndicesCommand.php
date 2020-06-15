@@ -59,7 +59,7 @@ class UpdateIndicesCommand extends Command
             // Run index mapping if the only option is not set or if the index name matches the
             // index
             if (null !== $indexOnly && $index->cleanName !== $indexOnly) {
-                break;
+                continue;
             }
 
             $this->info("$index->name");
