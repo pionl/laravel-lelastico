@@ -5,6 +5,7 @@ namespace Lelastico\Console;
 use Elasticsearch\Client;
 use Exception;
 use Illuminate\Console\Command;
+use Lelastico\Contracts\IndicesServiceContract;
 use Lelastico\Indices\AbstractElasticIndex;
 
 class UpdateIndicesCommand extends Command
@@ -35,16 +36,14 @@ class UpdateIndicesCommand extends Command
      *
      * @throws Exception
      */
-    public function handle()
+    public function handle(Client $client, IndicesServiceContract $indicesServiceContract)
     {
         // Get arguments
         $reCreatedIndex = $this->option('f');
         $deleteIndex = $this->option('d');
         $indexOnly = $this->option('only');
 
-        // Reuse same client
-        $client = resolve(Client::class);
-        $indices = config('lelastico.indices', []);
+        $indices = $indicesServiceContract->getAvailableIndices();
 
         if (empty($indices)) {
             $this->warn('No elastic search indices');

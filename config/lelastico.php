@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use Lelastico\IndicesService;
 
 return [
     // https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/configuration.html
@@ -11,4 +12,5 @@ return [
     'indices' => [],
     'log_failure' => true,
     'debugbar_log' => app()->isLocal() && function_exists('debugbar'),
+    'service' => IndicesService::class,
 ];

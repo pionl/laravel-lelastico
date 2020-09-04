@@ -4,11 +4,15 @@ namespace Lelastico;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 use Lelastico\Console\UpdateIndicesCommand;
+use Lelastico\Contracts\IndicesServiceContract;
 
 class LelasticoServiceProvider extends ServiceProvider
 {
+    const CONFIG_NAME = 'lelastico';
+
     /**
      * @var string
      */
@@ -17,31 +21,32 @@ class LelasticoServiceProvider extends ServiceProvider
      * @var string
      */
     protected $configFileName;
-    /**
-     * @var string
-     */
-    protected $configName;
 
     public function __construct($app)
     {
         parent::__construct($app);
-        $this->configName = 'lelastico';
-        $this->configFileName = $this->configName.'.php';
+
+        $this->configFileName = self::CONFIG_NAME.'.php';
         $this->configDefaultFilePath = __DIR__.'/../config/'.$this->configFileName;
     }
 
     public function register()
     {
-        $this->app->singleton(Client::class, function () {
-            return ClientBuilder::create()
-                                ->setHosts(config('lelastico.hosts'))
-                                ->build();
-        });
-
         // Merge config
         $this->mergeConfigFrom(
-            $this->configDefaultFilePath, $this->configName
+            $this->configDefaultFilePath, self::CONFIG_NAME
         );
+
+        $repositoryConfig = $this->app->get(Repository::class);
+
+        $this->app->singleton(Client::class, function () use ($repositoryConfig) {
+            return ClientBuilder::create()
+                ->setHosts($repositoryConfig->get(self::CONFIG_NAME.'.hosts'))
+                ->build();
+        });
+
+        $serviceFromConfig = $repositoryConfig->get(self::CONFIG_NAME.'.service');
+        $this->app->singleton(IndicesServiceContract::class, $serviceFromConfig);
     }
 
     public function boot()

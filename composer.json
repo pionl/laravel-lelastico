@@ -8,6 +8,7 @@
     }
   ],
   "require": {
+    "php": ">=7.4",
     "illuminate/support": ">=5.5",
     "elasticsearch/elasticsearch": "^7",
     "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#b0ddd4f6fe59cdf5b4288ea39f6fe089b596c7a0"
