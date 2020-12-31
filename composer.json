@@ -10,6 +10,9 @@
   "require": {
     "php": ">=7.4",
     "illuminate/support": ">=5.5",
+    "illuminate/http": ">=5.5",
+    "illuminate/pagination": ">=5.5",
+    "illuminate/console": ">=5.5",
     "elasticsearch/elasticsearch": "^7",
     "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9551a1e51d4059121072130716a9a31357283a08"
   },

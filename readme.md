@@ -13,6 +13,11 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 * Adds ability to create a query builder with query filters for each index.
 * Adds ability to build a query builder from request data (reusable component).
 
+## Requirements
+
+- Composer
+- PHP 7.4+
+
 ## Installation
 
 **1. Add custom repository to composer.json**

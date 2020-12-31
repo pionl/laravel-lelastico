@@ -6,12 +6,15 @@ use Elasticsearch\Client;
 use Erichard\ElasticQueryBuilder\Filter\Filter;
 use Erichard\ElasticQueryBuilder\QueryBuilder;
 use Exception;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Lelastico\Indices\AbstractElasticIndex;
 use Lelastico\Search\Query\Traits\AddQueries;
 use Lelastico\Search\Query\Traits\HasPaginationSettings;
 use Lelastico\Search\Query\Traits\LogQuery;
 use Lelastico\Search\Query\Traits\ParseResultsFromHits;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractBuilder
 {
@@ -20,28 +23,21 @@ abstract class AbstractBuilder
     use AddQueries;
     use ParseResultsFromHits;
 
-    /**
-     * @var QueryBuilder
-     */
-    public $query;
+    protected Request $request;
 
-    /**
-     * @var array|null
-     */
-    public $select = null;
-
+    public QueryBuilder $query;
+    public ?array $select = null;
     /**
      * Custom client (by default is resolved by each index).
-     *
-     * @var Client|null
      */
-    public $client = null;
+    public ?Client $client = null;
 
-    /**
-     * AvailabilitySearchBuilder constructor.
-     */
-    public function __construct()
+    public function __construct(Request $request, LoggerInterface $logger, Repository $config)
     {
+        $this->request = $request;
+        $this->logger = $logger;
+        $this->config = $config;
+
         // Create root filter that will be used as "group"
         $this->filter = Filter::bool();
 
@@ -52,13 +48,13 @@ abstract class AbstractBuilder
     abstract protected function createIndex(): AbstractElasticIndex;
 
     /**
-     * Runs a elastic query and returns laravel's LengthAwarePaginator.
+     * Runs a elastic query and returns Laravel's LengthAwarePaginator.
      *
      * @return LengthAwarePaginator
      *
      * @throws Exception
      */
-    public function paginate()
+    public function paginate(): LengthAwarePaginator
     {
         // Determine the index
         $index = $this->createIndex();
@@ -110,7 +106,6 @@ abstract class AbstractBuilder
             // Build simple array with _source array values (we do not need elastic related data)
             $items = $this->getResultsFromHits($result['hits']['hits']);
 
-            // Return array
             return new LengthAwarePaginator(
                 $items,
                 // Use aggregated total entries calculation or total hits
@@ -119,11 +114,14 @@ abstract class AbstractBuilder
                     : $result['hits']['total']['value'],
                 $this->perPage,
                 $this->currentPage,
-                ['path' => request()->fullUrl()]
+                [
+                    'path' => $this->request->url(),
+                    'query' => $this->request->query->all(),
+                ]
             );
         } catch (Exception $exception) {
-            if (config('lelastico.log_failure')) {
-                logger('Elastic search failed', [
+            if ($this->config->get('lelastico.log_failure')) {
+                $this->logger->error('Elastic search failed', [
                     'error' => $exception->getMessage(),
                     'query' => $query,
                 ]);
@@ -137,7 +135,7 @@ abstract class AbstractBuilder
      *
      * @return AbstractBuilder
      */
-    public function setSelect(array $select)
+    public function setSelect(array $select): self
     {
         $this->select = $select;
 
