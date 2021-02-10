@@ -148,6 +148,38 @@ Property mappings types using constants like:
             by provided this option.
     ```
 
+**Sorting**
+
+To enable sortable behavior add `HasSorting` trait to your instance of `AbstractBuilder` and implement method `allowedSortFields`.
+
+```
+/**
+ * Allowed fields for sorting.
+ *
+ * Key is the name of the field in the query.
+ * Value is the name of the field in the index.
+ *
+ * @return array
+ */
+public function allowedSortFields(): array
+{
+    return [
+        'goals' => 'goals_count',
+        'minutes' => 'played_minutes',
+    ];
+}
+```
+
+With sorting enabled you can sort the results using `sort` request query parameter. This parameter accepts list of fields for sorting in format `{field_name}:{sort_direction}`.
+
+Available directions for sorting are `asc` and `desc` and if not specified the default sort direction is set to `asc`.
+
+**Examples:**
+
+`sort[]=goals`
+
+`sort[]=goals:asc&sort[]=minutes:desc`
+
 ## TODO
 
 - improve documentation

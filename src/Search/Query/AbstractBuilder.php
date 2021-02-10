@@ -12,6 +12,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Lelastico\Indices\AbstractElasticIndex;
 use Lelastico\Search\Query\Traits\AddQueries;
 use Lelastico\Search\Query\Traits\HasPaginationSettings;
+use Lelastico\Search\Query\Traits\HasSorting;
 use Lelastico\Search\Query\Traits\LogQuery;
 use Lelastico\Search\Query\Traits\ParseResultsFromHits;
 use Psr\Log\LoggerInterface;
@@ -72,6 +73,11 @@ abstract class AbstractBuilder
         // Add filter only if it contains any filters.
         if (false === $this->filter->isEmpty()) {
             $this->query->addFilter($this->filter);
+        }
+
+        // Add sort if enabled
+        if (in_array(HasSorting::class, class_uses($this), true)) {
+            $this->addSort($this->query, $this->request);
         }
 
         // Build the query and improve it

@@ -14,7 +14,8 @@
     "illuminate/pagination": ">=5.5",
     "illuminate/console": ">=5.5",
     "elasticsearch/elasticsearch": "^7",
-    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9551a1e51d4059121072130716a9a31357283a08"
+    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9551a1e51d4059121072130716a9a31357283a08",
+    "illuminate/validation": ">=5.5"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.16",
