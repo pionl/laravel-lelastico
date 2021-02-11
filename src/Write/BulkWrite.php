@@ -42,6 +42,13 @@ class BulkWrite
      * @var callable|null
      */
     private $onSent;
+    
+    /**
+     * Wait for refresh
+     * 
+     * @var bool
+     */
+    public $refresh = false;
 
     /**
      * BulkWrite constructor.
@@ -102,6 +109,7 @@ class BulkWrite
         $response = $this->client->bulk([
             'body' => $this->documents,
             'index' => $this->index->name,
+            'refresh' => $this->refresh,
         ]);
 
         if (null !== $this->onSent) {
