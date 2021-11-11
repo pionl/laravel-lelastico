@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Lelastico\Constants\SortDirections;
 use Lelastico\Indices\AbstractElasticIndex;
 use Lelastico\Search\Query\Traits\AddQueries;
 use Lelastico\Search\Query\Traits\HasPaginationSettings;
@@ -32,6 +33,8 @@ abstract class AbstractBuilder
      * Custom client (by default is resolved by each index).
      */
     public ?Client $client = null;
+
+    protected bool $sortById = true;
 
     public function __construct(Request $request, LoggerInterface $logger, Repository $config)
     {
@@ -78,6 +81,10 @@ abstract class AbstractBuilder
         // Add sort if enabled
         if (in_array(HasSorting::class, class_uses($this), true)) {
             $this->addSort($this->query, $this->request);
+        }
+
+        if (true === $this->sortById) {
+            $this->query->addSort('_id', SortDirections::ASC);
         }
 
         // Build the query and improve it
@@ -146,5 +153,20 @@ abstract class AbstractBuilder
         $this->select = $select;
 
         return $this;
+    }
+
+    /**
+     * Ensure that entries are by default sorted by _id to ensure correct pagination.
+     */
+    public function setSortById(bool $sortById): self
+    {
+        $this->sortById = $sortById;
+
+        return $this;
+    }
+
+    public function isSortingById(): bool
+    {
+        return $this->sortById;
     }
 }

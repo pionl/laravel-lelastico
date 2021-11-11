@@ -42,10 +42,10 @@ class BulkWrite
      * @var callable|null
      */
     private $onSent;
-    
+
     /**
-     * Wait for refresh
-     * 
+     * Wait for refresh.
+     *
      * @var bool
      */
     public $refresh = false;

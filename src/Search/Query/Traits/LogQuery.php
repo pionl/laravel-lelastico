@@ -11,19 +11,46 @@ trait LogQuery
     protected Repository $config;
 
     /**
-     * Logs the query with debugbar (or any custom solution).
+     * Logs the query.
      *
      * @param array $result
      * @param array $query
      */
     protected function logQuery(array $result, array $query)
     {
-        if (false === $this->config->get('lelastico.debugbar_log')) {
+        $time = $result['took'] / 1000; // ms
+
+        $isDebug = $this->config->get('lelastico.log_debug');
+
+        if (false === $isDebug) {
+            if (true == $this->config->get('lelastico.log_measurement')) {
+                $this->logMeasurement($time, $query['index'] ?? 'unknown');
+            }
+
             return;
         }
 
-        // TODO refactor
-        add_measure('Elastic search', 0, $result['took'] / 1000);
-        debugbar()->debug('Elastic search query '.json_encode($query, JSON_PRETTY_PRINT));
+        // Debug-bar add_measure function
+        $this->logDebug($time, $query);
+    }
+
+    protected function logMeasurement(float $time, string $index): void
+    {
+        $this->logger->info('Elastic search query time', [
+            'took' => $time,
+            'index' => $index,
+        ]);
+    }
+
+    protected function logDebug(float $time, array $query): void
+    {
+        if (true === function_exists('add_measure')) {
+            add_measure('Elastic search', 0, $time);
+        }
+
+        $this->logger->debug('Elastic search query', [
+            'took' => $time,
+            'query' => $query,
+        ]);
     }
 }

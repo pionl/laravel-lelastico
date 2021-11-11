@@ -60,6 +60,10 @@ Use `ELASTICSEARCH_HOSTS` environment for setting elastic search hosts. [Format]
 
 ```
 $client = resolve(\Elasticsearch\Client::class);
+```
+
+```
+$client = $container->make(\Elasticsearch\Client::class);
 ``` 
 
 **Mapping types constants**
@@ -150,6 +154,10 @@ Property mappings types using constants like:
 
 **Sorting**
 
+**By default we are sorting by `_id` after any HasSorting logic to ensure that pagination is correct.** 
+
+You can turn this feature by using `$builder->setSortById(false);`
+
 To enable sortable behavior add `HasSorting` trait to your instance of `AbstractBuilder` and implement method `allowedSortFields`.
 
 ```
@@ -179,6 +187,14 @@ Available directions for sorting are `asc` and `desc` and if not specified the d
 `sort[]=goals`
 
 `sort[]=goals:asc&sort[]=minutes:desc`
+
+## Configuration
+
+- `log_measurement` Logs every query to log (default false). You can use `ELASTICSEARCH_LOG_MEASUREMENT` env.
+- `log_debug` Debug logs every query data to a log (true in local environment). You can use `ELASTICSEARCH_LOG_DEBUG` env.
+- `service` Enables to change available indices (implement IndicesServiceContract or  extend IndicesService)
+- `prefix` Used prefix for index names - uses APP_NAME and replace '-' to '_', converts name to slug variant.
+- `hosts` A list of IPS for your elastic search - https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/configuration.html. Use `;` separator. Default localhost:9200.
 
 ## TODO
 

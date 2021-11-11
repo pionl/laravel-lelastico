@@ -11,6 +11,7 @@ return [
     ),
     'indices' => [],
     'log_failure' => true,
-    'debugbar_log' => app()->isLocal() && function_exists('debugbar'),
+    'log_debug' => env('ELASTICSEARCH_LOG_DEBUG', 'local' === env('APP_ENV')),
+    'log_measurement' => env('ELASTICSEARCH_LOG_MEASUREMENT', false),
     'service' => IndicesService::class,
 ];
