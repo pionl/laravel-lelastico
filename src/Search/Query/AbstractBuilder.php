@@ -100,6 +100,7 @@ abstract class AbstractBuilder
             $query['body']['aggs']['total'] = [
                 'cardinality' => [
                     'field' => $query['body']['collapse']['field'],
+                    'precision_threshold' => 10000 // this should be equal to max window size TODO move settings to index
                 ],
             ];
         }
