@@ -13,8 +13,8 @@
     "illuminate/http": ">=5.5",
     "illuminate/pagination": ">=5.5",
     "illuminate/console": ">=5.5",
-    "elasticsearch/elasticsearch": "^7",
-    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9551a1e51d4059121072130716a9a31357283a08",
+    "elasticsearch/elasticsearch": "^7.17",
+    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9efe1b3a4491b8ca21b077d4d38ec8d53eeadd33",
     "illuminate/validation": ">=5.5"
   },
   "require-dev": {
