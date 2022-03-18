@@ -1,5 +1,7 @@
 # Lelastico - easier elastic search for Laravel
 
+![img](https://img.shields.io/badge/phpstan-8-green)
+![php](https://img.shields.io/badge/php-8.1-brightgreen)
 [![Total Downloads](https://poser.pugx.org/pion/laravel-lelastico/downloads?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
 [![Latest Stable Version](https://poser.pugx.org/pion/laravel-lelastico/v/stable?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
 [![Latest Unstable Version](https://poser.pugx.org/pion/laravel-lelastico/v/unstable?format=flat)](https://packagist.org/packages/pion/laravel-elastico)
@@ -16,7 +18,7 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 ## Requirements
 
 - Composer
-- PHP 7.4+
+- PHP 8.1
 
 ## Installation
 
@@ -36,12 +38,7 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 ```
 composer require pion/laravel-lelastico
 ```
-    
-**3. Add the service provider (Laravel 5.4 and below - supports Auto discovery)**
 
-```php
-\Lelastico\LelasticoServiceProvider::class,
-```    
 
 ## Dependencies
 

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Search\Query;
 
-use Erichard\ElasticQueryBuilder\Query\BoolQuery;
+use Erichard\ElasticQueryBuilder\Contracts\QueryInterface;
 
 abstract class AbstractQuery
 {
@@ -11,19 +13,12 @@ abstract class AbstractQuery
      */
     public bool $scoring = false;
 
-    /**
-     * @return array<BoolQuery>
-     */
-    abstract public function createFilters(): array;
+    abstract public function createQuery(): ?QueryInterface;
 
     /**
      * Does filter counts to scoring?
-     *
-     * @param bool $scoring
-     *
-     * @return AbstractQuery
      */
-    public function setScoring(bool $scoring): AbstractQuery
+    public function setScoring(bool $scoring): self
     {
         $this->scoring = $scoring;
 

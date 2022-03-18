@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Search\Query;
 
-
+use Erichard\ElasticQueryBuilder\Contracts\QueryInterface;
 use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 
 /**
@@ -11,30 +13,34 @@ use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 class GivenOrQueries extends AbstractQuery
 {
     /**
-     * @var AbstractQuery[]|array
-     */
-    public array $queries;
-
-    /**
      * @param array|AbstractQuery[] $queries List of queries that will be grouped into should filter
      * @param bool                  $scoring Does filters counts to scoring?
      */
-    public function __construct(array $queries, bool $scoring = false)
-    {
-        $this->queries = $queries;
+    public function __construct(
+        public array $queries,
+        bool $scoring = false
+    ) {
         $this->scoring = $scoring;
     }
 
-    public function createFilters(): array
+    public function createQuery(): ?QueryInterface
     {
         $boolFilter = new BoolQuery();
         // Loop all queries and create should filter
         foreach ($this->queries as $query) {
-            foreach ($query->createFilters() as $filter) {
-                $boolFilter->addShould($filter);
+            $elasticQuery = $query->createQuery();
+
+            if ($elasticQuery instanceof \Erichard\ElasticQueryBuilder\Contracts\QueryInterface === false) {
+                continue;
             }
+
+            $boolFilter->addShould($elasticQuery);
         }
 
-        return [$boolFilter];
+        if ($boolFilter->isEmpty()) {
+            return null;
+        }
+
+        return $boolFilter;
     }
 }

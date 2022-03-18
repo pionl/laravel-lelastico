@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Search\Query\Traits;
 
 use Erichard\ElasticQueryBuilder\QueryBuilder;
@@ -15,15 +17,9 @@ trait HasSorting
     /**
      * Allowed fields for sorting.
      *
-     * Key is the name of the field in the query.
-     * Value is the name of the field in the index.
+     * Key is the name of the field in the query. Value is the name of the field in the index.
      *
-     * [
-     *     'goals' => 'goals_count'
-     *     'minutes' => 'played_minutes'
-     * ]
-     *
-     * @return array
+     * [ 'goals' => 'goals_count' 'minutes' => 'played_minutes' ]
      */
     abstract public function allowedSortFields(): array;
 
@@ -52,7 +48,7 @@ trait HasSorting
         foreach (array_keys($this->allowedSortFields()) as $field) {
             $values[] = $field;
             foreach (SortDirections::getAll() as $direction) {
-                $values[] = "{$field}:{$direction}";
+                $values[] = sprintf('%s:%s', $field, $direction);
             }
         }
 

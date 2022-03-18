@@ -1,28 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Search\Query;
 
 use Erichard\ElasticQueryBuilder\Contracts\QueryInterface;
+use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 
 /**
  * Adds ability to create a query that will return given filters.
  */
-class GivenFilters extends AbstractQuery
+class GivenFiltersQuery extends AbstractQuery
 {
-    protected array $filters;
-
     /**
      * @param array|QueryInterface[] $filters
      * @param bool           $scoring Does filters counts to scoring?
      */
-    public function __construct(array $filters, bool $scoring = false)
-    {
-        $this->filters = $filters;
+    public function __construct(
+        protected array $filters,
+        bool $scoring = false
+    ) {
         $this->scoring = $scoring;
     }
 
-    public function createFilters(): array
+    public function createQuery(): ?QueryInterface
     {
-        return $this->filters;
+        return new BoolQuery(filter: $this->filters);
     }
 }

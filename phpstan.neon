@@ -1,0 +1,22 @@
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-mockery/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+
+parameters:
+
+    parallel:
+        processTimeout: 600.0
+
+    paths:
+        - src
+        - config
+
+    # The level 8 is the highest level
+    level: 8
+
+    # For Laravel models, like $attributesForPersonalFields
+    checkMissingIterableValueType: false
+

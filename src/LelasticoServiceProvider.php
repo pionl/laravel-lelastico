@@ -1,65 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico;
 
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
-use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
+use Lelastico\Configs\LelasticoConfig;
 use Lelastico\Console\UpdateIndicesCommand;
 use Lelastico\Contracts\IndicesServiceContract;
+use Lelastico\Services\IndicesService;
 
 class LelasticoServiceProvider extends ServiceProvider
 {
-    const CONFIG_NAME = 'lelastico';
+    protected const CONFIG_FILE_NAME = LelasticoConfig::NAME . '.php';
 
-    /**
-     * @var string
-     */
-    protected $configDefaultFilePath;
-    /**
-     * @var string
-     */
-    protected $configFileName;
+    protected const CONFIG_FILE_PATH = __DIR__ . '/../config/' . self::CONFIG_FILE_NAME;
 
-    public function __construct($app)
+    public function register(): void
     {
-        parent::__construct($app);
+        parent::register();
 
-        $this->configFileName = self::CONFIG_NAME.'.php';
-        $this->configDefaultFilePath = __DIR__.'/../config/'.$this->configFileName;
-    }
-
-    public function register()
-    {
         // Merge config
-        $this->mergeConfigFrom(
-            $this->configDefaultFilePath, self::CONFIG_NAME
-        );
+        $this->mergeConfigFrom(self::CONFIG_FILE_PATH, LelasticoConfig::NAME);
 
-        $repositoryConfig = $this->app->get(Repository::class);
+        /** @var LelasticoConfig $config */
+        $config = $this->app->make(LelasticoConfig::class);
 
-        $this->app->singleton(Client::class, function () use ($repositoryConfig) {
-            return ClientBuilder::create()
-                ->setHosts($repositoryConfig->get(self::CONFIG_NAME.'.hosts'))
-                ->build();
-        });
+        $this->app->singleton(Client::class, fn () => ClientBuilder::create()
+            ->setHosts($config->getHosts())
+            ->build());
 
-        $serviceFromConfig = $repositoryConfig->get(self::CONFIG_NAME.'.service');
-        $this->app->singleton(IndicesServiceContract::class, $serviceFromConfig);
+        $this->app->singleton(IndicesServiceContract::class, IndicesService::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([
-                UpdateIndicesCommand::class,
-            ]);
+            $this->commands([UpdateIndicesCommand::class]);
         }
 
         // Publish config options
         $this->publishes([
-            $this->configDefaultFilePath => config_path($this->configFileName),
+            self::CONFIG_FILE_PATH => $this->app->configPath(self::CONFIG_FILE_NAME),
         ]);
     }
 }

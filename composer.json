@@ -8,18 +8,30 @@
     }
   ],
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.1",
     "illuminate/support": ">=5.5",
     "illuminate/http": ">=5.5",
     "illuminate/pagination": ">=5.5",
     "illuminate/console": ">=5.5",
     "elasticsearch/elasticsearch": "^7.17",
-    "erichard/elasticsearch-query-builder": "dev-upgrade-3",
+    "erichard/elasticsearch-query-builder": "dev-upgrade-3#8ee6e2adb7a7557f82b2a8f0eb84b704eb40ceb4",
     "illuminate/validation": ">=5.5"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^2.16",
-    "overtrue/phplint": "^1.2"
+    "nunomaduro/larastan": "^1.0.3",
+    "orchestra/testbench": "^7.1",
+    "phpstan/phpdoc-parser": "^1.2",
+    "phpstan/phpstan": "^1.4",
+    "phpstan/phpstan-deprecation-rules": "^1.0",
+    "phpstan/phpstan-mockery": "^1.0",
+    "phpstan/phpstan-phpunit": "^1.0",
+    "phpunit/phpunit": "^9.5.13",
+    "rector/rector": "^0.12.17",
+    "sentry/sentry-laravel": "^2.11",
+    "symplify/easy-coding-standard": "^10.1"
+  },
+  "suggest": {
+    "sentry/sentry-laravel": "For tracking metrics of your elastic queries. Automatically tracked."
   },
   "autoload": {
     "psr-4": {
@@ -27,9 +39,12 @@
     }
   },
   "scripts": {
-    "lint:fix": "./vendor/bin/php-cs-fixer fix --config=.php_cs --using-cache false",
-    "lint:check": "./vendor/bin/phplint",
-    "lint": "composer run-script lint:fix && composer run-script lint:check"
+    "lint:fix": "./vendor/bin/ecs --fix",
+    "lint:stan": "./vendor/bin/phpstan",
+    "lint:upgrade": "vendor/bin/rector process",
+    "lint:md": "vendor/bin/ecs check-markdown README.md CHANGELOG.md CODE_OF_CONDUCT.md LICENSE.md",
+    "lint": "composer lint:fix && composer lint:upgrade && composer lint:stan && composer lint:md",
+    "test": "./vendor/bin/phpunit"
   },
   "extra": {
     "laravel": {
@@ -44,7 +59,6 @@
       "url": "https://github.com/pionl/elasticsearch-query-builder.git"
     }
   ],
-
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,

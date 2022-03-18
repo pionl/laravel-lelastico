@@ -1,20 +1,14 @@
 <?php
 
-namespace Lelastico\Search\Query\Traits;
+declare(strict_types=1);
 
-use Lelastico\Search\Query\AbstractBuilder;
+namespace Lelastico\Search\Query\Traits;
 
 trait HasPaginationSettings
 {
-    /**
-     * @var int
-     */
-    protected $currentPage = 1;
+    protected int $currentPage = 1;
 
-    /**
-     * @var int
-     */
-    protected $perPage = 10;
+    protected int $perPage = 10;
 
     public function setPerPage(int $perPage): self
     {
@@ -23,15 +17,20 @@ trait HasPaginationSettings
         return $this;
     }
 
-    /**
-     * @param int $page
-     *
-     * @return AbstractBuilder
-     */
     public function setCurrentPage(int $page): self
     {
         $this->currentPage = $page;
 
         return $this;
+    }
+
+    public function getCurrentPage(): int
+    {
+        return $this->currentPage;
+    }
+
+    public function getPerPage(): int
+    {
+        return $this->perPage;
     }
 }

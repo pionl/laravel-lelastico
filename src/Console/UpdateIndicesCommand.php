@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Console;
 
 use Elasticsearch\Client;
-use Exception;
 use Illuminate\Console\Command;
 use Lelastico\Contracts\IndicesServiceContract;
 use Lelastico\Indices\AbstractElasticIndex;
@@ -31,14 +32,9 @@ class UpdateIndicesCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
-     *
-     * @throws Exception
      */
-    public function handle(Client $client, IndicesServiceContract $indicesServiceContract)
+    public function handle(Client $client, IndicesServiceContract $indicesServiceContract): void
     {
-        // Get arguments
         $reCreatedIndex = $this->option('f');
         $deleteIndex = $this->option('d');
         $indexOnly = $this->option('only');
@@ -57,11 +53,11 @@ class UpdateIndicesCommand extends Command
 
             // Run index mapping if the only option is not set or if the index name matches the
             // index
-            if (null !== $indexOnly && $index->cleanName !== $indexOnly) {
+            if ($indexOnly !== null && $index->cleanName !== $indexOnly) {
                 continue;
             }
 
-            $this->info("$index->name");
+            $this->info($index->name);
 
             // Should we delete the index to force mappings or check if the index exists
             $exists = $index->exists();
@@ -79,7 +75,7 @@ class UpdateIndicesCommand extends Command
             // Create index or update mappings
             if ($exists) {
                 $this->line('   Updating mappings');
-                $index->update(true === $this->option('skip-settings-update'));
+                $index->update($this->option('skip-settings-update') === true);
             } else {
                 $this->line('   Creating index with mappings');
 
@@ -87,7 +83,7 @@ class UpdateIndicesCommand extends Command
             }
 
             // Stop the foreach if only limit has been matched.
-            if (null !== $indexOnly) {
+            if ($indexOnly !== null) {
                 break;
             }
         }
