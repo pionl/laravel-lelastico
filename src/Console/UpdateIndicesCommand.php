@@ -4,65 +4,58 @@ declare(strict_types=1);
 
 namespace Lelastico\Console;
 
-use Elasticsearch\Client;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Container\Container;
 use Lelastico\Contracts\IndicesServiceContract;
 use Lelastico\Indices\AbstractElasticIndex;
 
 class UpdateIndicesCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'elastic:indices {--only=} {--f} {--d} {--skip-settings-update}';
+    protected $signature = 'elastic:indices 
+    {index? : change only given index} 
+    {--f|force : will delete the index and data and creates a new index.} 
+    {--d|delete : will delete the index and data} 
+    {--s|skip-settings-update : Do not not update settings to prevent index close / open.}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Updates the elastic indices
-        --only="only", handle only given index
-        --f, will delete the index and data. Will new index with mappings
-        --d, will delete the index and data
-        --skip-settings-update, when upadting, the index is closed / opened due the settings update. You can skip it
-        by provided this option.';
+    protected $description = 'Change elastic indices';
 
     /**
      * Execute the console command.
      */
-    public function handle(Client $client, IndicesServiceContract $indicesServiceContract): void
+    public function handle(IndicesServiceContract $indicesServiceContract, Container $container): void
     {
-        $reCreatedIndex = $this->option('f');
-        $deleteIndex = $this->option('d');
-        $indexOnly = $this->option('only');
+        $forceCreateNewIndex = $this->option('force');
+        $deleteIndex = $this->option('delete');
+        $preferredIndex = $this->argument('index');
 
         $indices = $indicesServiceContract->getAvailableIndices();
 
         if (empty($indices)) {
-            $this->warn('No elastic search indices');
+            $this->warn('No available indices');
 
             return;
         }
 
+        $processed = false;
+
         foreach ($indices as $IndexClass) {
             /** @var AbstractElasticIndex $index */
-            $index = new $IndexClass($client);
+            $index = $container->make($IndexClass);
 
             // Run index mapping if the only option is not set or if the index name matches the
             // index
-            if ($indexOnly !== null && $index->cleanName !== $indexOnly) {
+            if ($preferredIndex !== null && $index->cleanName !== $preferredIndex) {
                 continue;
             }
+
+            $processed = true;
 
             $this->info($index->name);
 
             // Should we delete the index to force mappings or check if the index exists
             $exists = $index->exists();
-            if ($exists && ($reCreatedIndex || $deleteIndex)) {
-                $this->warn('   Deleting index');
+            if ($exists && ($forceCreateNewIndex || $deleteIndex)) {
+                $this->warn('☠️  Deleting index');
                 $index->delete();
                 $exists = false;
             }
@@ -74,18 +67,22 @@ class UpdateIndicesCommand extends Command
 
             // Create index or update mappings
             if ($exists) {
-                $this->line('   Updating mappings');
+                $this->line('⛑  Updating mappings');
                 $index->update($this->option('skip-settings-update') === true);
             } else {
-                $this->line('   Creating index with mappings');
+                $this->line('🚀  Creating index with mappings');
 
                 $index->create();
             }
 
             // Stop the foreach if only limit has been matched.
-            if ($indexOnly !== null) {
+            if ($preferredIndex !== null) {
                 break;
             }
+        }
+
+        if ($processed === false && $preferredIndex !== null) {
+            $this->warn('🆘 Given index does not exists: ' . $preferredIndex);
         }
     }
 }

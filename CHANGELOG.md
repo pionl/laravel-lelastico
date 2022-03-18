@@ -49,7 +49,19 @@ register ()  {
 }
 ```
 - **Config** - `log_measurement` moved to `tracing.enabled` and env renamed from `ELASTICSEARCH_LOG_MEASUREMENT` to `ELASTICSEARCH_TRACING`
+- **Command lines** the signature was changed to:
+```
+Usage:
+  elastic:indices [options] [--] [<index>]
 
+Arguments:
+  index                       change only given index
+
+Options:
+  -f, --force                 will delete the index and data and creates a new index.
+  -d, --delete                will delete the index and data
+  -s, --skip-settings-update  Do not not update settings to prevent index close / open.
+```
 
 # TODO
 
