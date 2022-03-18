@@ -22,11 +22,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_80);
+    $parameters->set(Option::AUTO_IMPORT_NAMES, true);
+    $parameters->set(Option::IMPORT_SHORT_CLASSES, true);
+
 
     // Define what rule sets will be applied
     $containerConfigurator->import(LevelSetList::UP_TO_PHP_80);
 
     $containerConfigurator->import(SetList::CODE_QUALITY);
+
 
     $services = $containerConfigurator->services();
     $services->set(AddVoidReturnTypeWhereNoReturnRector::class);

@@ -8,6 +8,7 @@ use Closure;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use Erichard\ElasticQueryBuilder\QueryBuilder;
+use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Lelastico\Search\Query\AbstractSearchBuilder;
 
@@ -93,8 +94,10 @@ class SearchService
             $this->tracingService->finish($tracers, $took);
 
             return $response;
-        } catch (ElasticsearchException $exception) {
-            $this->logService->logFailure($measurementName, $indexName, $query, $exception);
+        } catch (Exception $exception) {
+            if ($exception instanceof ElasticsearchException) {
+                $this->logService->logFailure($measurementName, $indexName, $query, $exception);
+            }
 
             throw $exception;
         }

@@ -75,7 +75,11 @@ abstract class AbstractSearchBuilder
 
         if ($this->select !== null) {
             $source = $builder->getSource() ?? [];
-            $builder->setSource(array_merge($source, $this->select));
+            if (is_array($source)) {
+                $builder->setSource(array_merge($source, $this->select));
+            } else {
+                $builder->setSource($this->select);
+            }
         }
 
         if ($this->sortById) {

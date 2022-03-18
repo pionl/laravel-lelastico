@@ -30,7 +30,7 @@ class GivenOrQueries extends AbstractQuery
         foreach ($this->queries as $query) {
             $elasticQuery = $query->createQuery();
 
-            if ($elasticQuery instanceof \Erichard\ElasticQueryBuilder\Contracts\QueryInterface === false) {
+            if ($elasticQuery instanceof QueryInterface === false) {
                 continue;
             }
 
