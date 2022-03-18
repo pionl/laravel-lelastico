@@ -67,16 +67,15 @@ abstract class AbstractSearchBuilder
         return $builder;
     }
 
-    public function buildForPagination(): QueryBuilder
+    public function buildForPagination(QueryBuilder $builder): QueryBuilder
     {
-        $builder = $this->build();
-
         $builder->setSize($this->perPage);
         // Setup from by calculating current page
         $builder->setFrom($this->perPage * ($this->currentPage - 1));
 
         if ($this->select !== null) {
-            $builder->setSource($this->select);
+            $source = $builder->getSource() ?? [];
+            $builder->setSource(array_merge($source, $this->select));
         }
 
         if ($this->sortById) {
@@ -94,10 +93,8 @@ abstract class AbstractSearchBuilder
         return $builder;
     }
 
-    public function buildForAggregation(): QueryBuilder
+    public function buildForAggregation(QueryBuilder $builder): QueryBuilder
     {
-        $builder = $this->build();
-
         // Setup basic information
         $builder->setSize(0);
 

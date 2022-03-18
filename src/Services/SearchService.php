@@ -6,8 +6,8 @@ namespace Lelastico\Services;
 
 use Closure;
 use Elasticsearch\Client;
+use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use Erichard\ElasticQueryBuilder\QueryBuilder;
-use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Lelastico\Search\Query\AbstractSearchBuilder;
 
@@ -26,7 +26,7 @@ class SearchService
         array $queryData = []
     ): LengthAwarePaginator {
         return $this->wrapSearch(
-            $builder->buildForPagination(),
+            $builder->buildForPagination($builder->build()),
             $builder,
             function (array $result) use ($builder, $url, $queryData): LengthAwarePaginator {
                 // Validate the result (edge case, elastic client throws an error).
@@ -59,7 +59,7 @@ class SearchService
     public function aggregations(AbstractSearchBuilder $builder): array
     {
         return $this->wrapSearch(
-            $builder->buildForAggregation(),
+            $builder->buildForAggregation($builder->build()),
             $builder,
             fn (array $result): array => $result['aggregations'] ?? []
         );
@@ -72,8 +72,7 @@ class SearchService
         QueryBuilder $queryBuilder,
         AbstractSearchBuilder $builder,
         Closure $buildResult
-    ): mixed
-    {
+    ): mixed {
         $measurementName = $builder->getMeasurementName();
         $indexName = $builder->getIndex()
             ->name;
@@ -94,7 +93,7 @@ class SearchService
             $this->tracingService->finish($tracers, $took);
 
             return $response;
-        } catch (Exception $exception) {
+        } catch (ElasticsearchException $exception) {
             $this->logService->logFailure($measurementName, $indexName, $query, $exception);
 
             throw $exception;

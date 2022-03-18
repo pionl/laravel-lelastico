@@ -41,7 +41,7 @@ class TracingService
             /** @var TracerContract $tracer */
             $tracer = $this->container->make($tracerClass);
 
-            if ($tracer->start($measurementName) === true) {
+            if ($tracer->start($measurementName)) {
                 $tracers[] = $tracer;
             }
         }
