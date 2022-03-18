@@ -2,21 +2,17 @@
 
 namespace Lelastico\Search\Query;
 
-use Erichard\ElasticQueryBuilder\Filter\Filter;
+use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 
 abstract class AbstractQuery
 {
     /**
      * Adds the query filter to must not filter in elastic search.
-     *
-     * @var bool
      */
-    public $scoring = false;
+    public bool $scoring = false;
 
     /**
-     * Creates elastic query filters.
-     *
-     * @return Filter[]
+     * @return array<BoolQuery>
      */
     abstract public function createFilters(): array;
 

@@ -3,7 +3,7 @@
 namespace Lelastico\Search\Query;
 
 use Elasticsearch\Client;
-use Erichard\ElasticQueryBuilder\Filter\Filter;
+use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 use Erichard\ElasticQueryBuilder\QueryBuilder;
 use Exception;
 use Illuminate\Contracts\Config\Repository;
@@ -43,7 +43,7 @@ abstract class AbstractBuilder
         $this->config = $config;
 
         // Create root filter that will be used as "group"
-        $this->filter = Filter::bool();
+        $this->filter = new BoolQuery();
 
         // Prepare the underlying query builder
         $this->query = new QueryBuilder();
@@ -75,11 +75,12 @@ abstract class AbstractBuilder
 
         // Add filter only if it contains any filters.
         if (false === $this->filter->isEmpty()) {
-            $this->query->addFilter($this->filter);
+            $this->query->setQuery($this->filter);
         }
 
         // Add sort if enabled
         if (in_array(HasSorting::class, class_uses($this), true)) {
+            /** @var HasSorting|AbstractBuilder $this */
             $this->addSort($this->query, $this->request);
         }
 
@@ -88,7 +89,7 @@ abstract class AbstractBuilder
         }
 
         // Build the query and improve it
-        $query = $this->query->getQuery();
+        $query = $this->query->build();
 
         // If the we are using collapse, the total hits is incorrect - calculate total hits for collapsed
         // entries

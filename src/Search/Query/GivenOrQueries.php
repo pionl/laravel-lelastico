@@ -2,7 +2,8 @@
 
 namespace Lelastico\Search\Query;
 
-use Erichard\ElasticQueryBuilder\Filter\Filter;
+
+use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 
 /**
  * Adds ability to create a list of filters based from list  queries with or condition.
@@ -12,7 +13,7 @@ class GivenOrQueries extends AbstractQuery
     /**
      * @var AbstractQuery[]|array
      */
-    public $queries;
+    public array $queries;
 
     /**
      * @param array|AbstractQuery[] $queries List of queries that will be grouped into should filter
@@ -26,7 +27,7 @@ class GivenOrQueries extends AbstractQuery
 
     public function createFilters(): array
     {
-        $boolFilter = Filter::bool();
+        $boolFilter = new BoolQuery();
         // Loop all queries and create should filter
         foreach ($this->queries as $query) {
             foreach ($query->createFilters() as $filter) {

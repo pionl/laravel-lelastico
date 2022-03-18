@@ -2,7 +2,7 @@
 
 namespace Lelastico\Search\Request;
 
-use Erichard\ElasticQueryBuilder\Filter\Filter;
+use Erichard\ElasticQueryBuilder\Query\TermsQuery;
 use Illuminate\Http\Request;
 use Lelastico\Search\Query\GivenFilters;
 
@@ -15,7 +15,7 @@ class BoolFilter extends RequestFilter
     {
         $fieldName = is_string($fieldName) ? $fieldName : $requestKey;
         parent::__construct($request, $requestKey, function ($value) use ($fieldName) {
-            return new GivenFilters([Filter::term()->setField($fieldName)->setValue($value)]);
+            return new GivenFilters([new TermsQuery($fieldName, $value)]);
         });
 
         // Ensure that value is boolean

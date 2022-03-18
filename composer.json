@@ -8,13 +8,13 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
     "illuminate/support": ">=5.5",
     "illuminate/http": ">=5.5",
     "illuminate/pagination": ">=5.5",
     "illuminate/console": ">=5.5",
     "elasticsearch/elasticsearch": "^7.17",
-    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9efe1b3a4491b8ca21b077d4d38ec8d53eeadd33",
+    "erichard/elasticsearch-query-builder": "dev-upgrade-3",
     "illuminate/validation": ">=5.5"
   },
   "require-dev": {
@@ -43,5 +43,13 @@
       "type": "git",
       "url": "https://github.com/pionl/elasticsearch-query-builder.git"
     }
-  ]
+  ],
+
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
 }

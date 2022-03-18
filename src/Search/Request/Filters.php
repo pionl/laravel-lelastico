@@ -2,8 +2,6 @@
 
 namespace Lelastico\Search\Request;
 
-use Erichard\ElasticQueryBuilder\Filter\MatchFilter;
-use Erichard\ElasticQueryBuilder\Filter\TermFilter;
 use Illuminate\Http\Request;
 use Lelastico\Search\Query\AbstractBuilder;
 

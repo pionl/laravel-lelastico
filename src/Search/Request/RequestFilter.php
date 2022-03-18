@@ -31,7 +31,7 @@ class RequestFilter extends AbstractFilter
      * @param string          $requestKey resolves value from the $request under given key
      * @param string|callable $queryClass Creates a query of given class with value as first argument (provide closure
      *                                    that will create query, first argument contains value).
-     *                                    Example: fn($value) => new NameQuery($value)
+     *                                    Example: fn($value) => new MyQueyr($value)
      */
     public function __construct(Request $request, string $requestKey, $queryClass)
     {

@@ -2,7 +2,7 @@
 
 namespace Lelastico\Search\Query\Traits;
 
-use Erichard\ElasticQueryBuilder\Filter\BoolFilter;
+use Erichard\ElasticQueryBuilder\Query\BoolQuery;
 use Lelastico\Search\Query\AbstractQuery;
 use Lelastico\Search\Request\Filters;
 
@@ -10,10 +10,8 @@ trait AddQueries
 {
     /**
      * Bool filter that is in the root of the query.
-     *
-     * @var BoolFilter
      */
-    protected $filter;
+    protected BoolQuery $filter;
 
     /**
      * Add queries from given filters. Allows to create pass fresh filters instance like:
