@@ -170,11 +170,16 @@ abstract class AbstractSearchBuilder
     public function getMeasurementName(): string
     {
         if ($this->measurementName === null) {
-            $parts = explode('\\', static::class);
-            $this->measurementName = end($parts);
+            $this->measurementName = $this->getDefaultMeasurementName();
         }
 
         return $this->measurementName;
+    }
+
+    public function getDefaultMeasurementName(): string
+    {
+        $parts = explode('\\', static::class);
+        return end($parts);
     }
 
     /**
