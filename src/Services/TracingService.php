@@ -29,6 +29,9 @@ class TracingService
             : array_merge([SentryTracer::class], $configTracers);
     }
 
+    /**
+     * @return array<TracerContract>
+     */
     public function start(string $measurementName): array
     {
         if ($this->config->isTracingEnabled() === false) {

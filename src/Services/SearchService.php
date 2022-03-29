@@ -9,7 +9,10 @@ use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use Erichard\ElasticQueryBuilder\QueryBuilder;
 use Exception;
+use GuzzleHttp\Ring\Future\FutureArrayInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Lelastico\Contracts\TracerContract;
+use Lelastico\Entities\LazySearchEntity;
 use Lelastico\Search\Query\AbstractSearchBuilder;
 
 class SearchService
@@ -67,29 +70,111 @@ class SearchService
     }
 
     /**
+     * @param array<AbstractSearchBuilder> $builders
+     * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/future_mode.html
+     */
+    public function chunkAggregations(array $builders, string $summarizedMeasurementName): array
+    {
+        if ($builders === []) {
+            return [];
+        }
+
+        /** @var array<LazySearchEntity> $searches */
+        $searches = [];
+        foreach ($builders as $builder) {
+            $queryBuilder = $builder->buildForAggregation($builder->build());
+            $query = $queryBuilder->build();
+
+            $query['client'] = [
+                'future' => 'lazy',
+            ];
+
+            $measurementName = $builder->getMeasurementName();
+
+            $tracers = $this->tracingService->start($measurementName);
+
+            /** @var FutureArrayInterface $result */
+            $result = $this->client->search($query);
+            $searches[] = new LazySearchEntity($measurementName, $query, $builder, $tracers, $result,);
+        }
+
+        $tracers = $this->tracingService->start($summarizedMeasurementName);
+
+        $aggregations = [];
+        $sumTook = 0;
+        foreach ($searches as $search) {
+            $aggregations += $this->handleSearch(
+                $search->builder,
+                $search->measurementName,
+                $search->query,
+                $search->tracers,
+                fn () => $search->result->wait(),
+                function (array $result, int $took) use (&$sumTook) {
+                    $sumTook += $took;
+
+                    return $result['aggregations'];
+                },
+            );
+        }
+
+        $this->tracingService->finish($tracers, $sumTook);
+
+        return $aggregations;
+    }
+
+    /**
      * @param Closure(array):mixed $buildResult
      */
     protected function wrapSearch(
         QueryBuilder $queryBuilder,
         AbstractSearchBuilder $builder,
-        Closure $buildResult
+        Closure $buildResult,
+        array $clientParams = []
     ): mixed {
         $measurementName = $builder->getMeasurementName();
-        $indexName = $builder->getIndex()
-            ->name;
 
         $tracers = $this->tracingService->start($measurementName);
 
         $query = $queryBuilder->build();
 
+        if ($clientParams !== []) {
+            $query['client'] = $clientParams;
+        }
+
+        return $this->handleSearch(
+            $builder,
+            $measurementName,
+            $query,
+            $tracers,
+            fn () => $this->client->search($query),
+            $buildResult
+        );
+    }
+
+    /**
+     * @param array<TracerContract>      $tracers
+     * @param Closure(): array           $getResult
+     * @param Closure(array, int): mixed $handleResult Gets result + took duration
+     */
+    protected function handleSearch(
+        AbstractSearchBuilder $builder,
+        string $measurementName,
+        array $query,
+        array $tracers,
+        Closure $getResult,
+        Closure $handleResult,
+    ): mixed {
+        $indexName = $builder->getIndex()
+            ->name;
+
         try {
-            $result = $this->client->search($query);
+            $result = $getResult();
 
             $took = (int) ($result['took'] ?? 0);
 
             $this->logService->logResult($measurementName, $indexName, $query, $result, $took);
 
-            $response = $buildResult($result);
+            $response = $handleResult($result, $took);
 
             $this->tracingService->finish($tracers, $took);
 
