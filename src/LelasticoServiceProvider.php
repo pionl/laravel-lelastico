@@ -8,6 +8,7 @@ use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\ServiceProvider;
 use Lelastico\Configs\LelasticoConfig;
+use Lelastico\Console\ClearCacheCommand;
 use Lelastico\Console\UpdateIndicesCommand;
 use Lelastico\Contracts\IndicesServiceContract;
 use Lelastico\Services\IndicesService;
@@ -38,7 +39,7 @@ class LelasticoServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([UpdateIndicesCommand::class]);
+            $this->commands([UpdateIndicesCommand::class, ClearCacheCommand::class]);
         }
 
         // Publish config options

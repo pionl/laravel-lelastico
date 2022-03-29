@@ -81,7 +81,7 @@ class UpdateIndicesCommand extends Command
             }
         }
 
-        if ($processed === false && $preferredIndex !== null) {
+        if ($processed === false && is_string($preferredIndex)) {
             $this->warn('🆘 Given index does not exists: ' . $preferredIndex);
         }
     }
