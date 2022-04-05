@@ -14,7 +14,7 @@
     "illuminate/pagination": ">=5.5",
     "illuminate/console": ">=5.5",
     "elasticsearch/elasticsearch": "^7.17",
-    "erichard/elasticsearch-query-builder": "dev-upgrade-3#068a17f4fe8fc592f3ae31bf0db8dc2b73f6d734",
+    "erichard/elasticsearch-query-builder": "dev-upgrade-3#6da5cae72c53d4de03ea79a2550ae5216e3295f3",
     "illuminate/validation": ">=5.5"
   },
   "require-dev": {
