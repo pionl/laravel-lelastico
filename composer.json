@@ -14,7 +14,7 @@
     "illuminate/pagination": ">=5.5",
     "illuminate/console": ">=5.5",
     "elasticsearch/elasticsearch": "^7.17",
-    "erichard/elasticsearch-query-builder": "dev-geo-bounding-box-query#9ff6960485a45e419368880214e58a795a8aa93a",
+    "erichard/elasticsearch-query-builder": "3.0.0-beta",
     "illuminate/validation": ">=5.5"
   },
   "require-dev": {
@@ -53,12 +53,6 @@
       ]
     }
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/pionl/elasticsearch-query-builder.git"
-    }
-  ],
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
