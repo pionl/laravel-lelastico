@@ -43,7 +43,7 @@
     "lint:stan": "./vendor/bin/phpstan",
     "lint:upgrade": "vendor/bin/rector process",
     "lint:md": "vendor/bin/ecs check-markdown README.md CHANGELOG.md CODE_OF_CONDUCT.md LICENSE.md",
-    "lint": "composer lint:fix && composer lint:upgrade && composer lint:stan && composer lint:md",
+    "lint": "composer lint:upgrade && composer lint:fix && composer lint:stan && composer lint:md",
     "test": "./vendor/bin/phpunit"
   },
   "extra": {

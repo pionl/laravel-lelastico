@@ -10,7 +10,7 @@ use Lelastico\Exceptions\ConfigException;
 
 class LelasticoConfig extends AbstractConfig
 {
-    public const NAME = 'lelastico';
+    final public const NAME = 'lelastico';
 
     protected const KEY_TRACING = 'tracing';
 

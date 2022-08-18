@@ -15,13 +15,23 @@ use Lelastico\Contracts\TracerContract;
 use Lelastico\Entities\LazySearchEntity;
 use Lelastico\Search\Query\AbstractSearchBuilder;
 
-class SearchService
+class LelasticoService
 {
     public function __construct(
         private Client $client,
         private TracingService $tracingService,
         private LogService $logService
     ) {
+    }
+
+    public function get(AbstractSearchBuilder $builder): array
+    {
+        return $this->wrapSearch(
+            $builder->buildForGet($builder->build()),
+            $builder,
+            // Build simple array with _source array values (we do not need elastic related data)
+            fn (array $result): array => $builder->getResultsFromHits($result['hits']['hits'])
+        );
     }
 
     public function paginate(
@@ -71,6 +81,7 @@ class SearchService
 
     /**
      * @param array<AbstractSearchBuilder> $builders
+     *
      * @see https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/future_mode.html
      */
     public function chunkAggregations(array $builders, string $summarizedMeasurementName): array
@@ -95,7 +106,7 @@ class SearchService
 
             /** @var FutureArrayInterface $result */
             $result = $this->client->search($query);
-            $searches[] = new LazySearchEntity($measurementName, $query, $builder, $tracers, $result,);
+            $searches[] = new LazySearchEntity($measurementName, $query, $builder, $tracers, $result);
         }
 
         $tracers = $this->tracingService->start($summarizedMeasurementName);

@@ -10,8 +10,8 @@ use Lelastico\Actions\CreateQueryBuilderAction;
 class BuilderDependencies
 {
     public function __construct(
-        public readonly Container $container,
-        public readonly CreateQueryBuilderAction $createQueryBuilderAction,
+        public Container $container,
+        public CreateQueryBuilderAction $createQueryBuilderAction,
     ) {
     }
 }

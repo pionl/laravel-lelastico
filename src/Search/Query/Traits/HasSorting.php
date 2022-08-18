@@ -32,7 +32,7 @@ trait HasSorting
         $request->validate($this->getValidationRules());
 
         foreach ($request->get('sort') as $sort) {
-            $exploded = explode(':', $sort);
+            $exploded = explode(':', (string) $sort);
 
             $field = $this->allowedSortFields()[$exploded[0]];
             $direction = $exploded[1] ?? SortDirections::ASC;

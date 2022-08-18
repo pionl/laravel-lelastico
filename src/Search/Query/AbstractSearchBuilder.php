@@ -67,24 +67,19 @@ abstract class AbstractSearchBuilder
         return $builder;
     }
 
+    public function buildForGet(QueryBuilder $builder): QueryBuilder
+    {
+        $this->applyBaseGetSettings($builder);
+
+        return $builder;
+    }
+
     public function buildForPagination(QueryBuilder $builder): QueryBuilder
     {
-        $builder->setSize($this->perPage);
         // Setup from by calculating current page
         $builder->setFrom($this->perPage * ($this->currentPage - 1));
 
-        if ($this->select !== null) {
-            $source = $builder->getSource() ?? [];
-            if (is_array($source)) {
-                $builder->setSource(array_merge($source, $this->select));
-            } else {
-                $builder->setSource($this->select);
-            }
-        }
-
-        if ($this->sortById) {
-            $this->applySortById($builder);
-        }
+        $this->applyBaseGetSettings($builder);
 
         if ($builder->getCollapse() !== null) {
             $builder->addAggregation((new CardinalityAggregation(
@@ -190,5 +185,23 @@ abstract class AbstractSearchBuilder
     protected function applySortById(QueryBuilder $builder): void
     {
         $builder->addSort('_id', SortDirections::ASC);
+    }
+
+    protected function applyBaseGetSettings(QueryBuilder $builder): void
+    {
+        $builder->setSize($this->perPage);
+
+        if ($this->select !== null) {
+            $source = $builder->getSource() ?? [];
+            if (is_array($source)) {
+                $builder->setSource(array_merge($source, $this->select));
+            } else {
+                $builder->setSource($this->select);
+            }
+        }
+
+        if ($this->sortById) {
+            $this->applySortById($builder);
+        }
     }
 }

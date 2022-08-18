@@ -14,7 +14,7 @@ trait AddQueries
     /**
      * Bool filter that is in the root of the query.
      */
-    public readonly BoolQuery $query;
+    public BoolQuery $query;
 
     /**
      * Add queries from given filters. Allows to create pass fresh filters instance like:

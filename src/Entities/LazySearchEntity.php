@@ -11,14 +11,14 @@ use Lelastico\Search\Query\AbstractSearchBuilder;
 class LazySearchEntity
 {
     public function __construct(
-        public readonly string $measurementName,
-        public readonly array $query,
-        public readonly AbstractSearchBuilder $builder,
+        public string $measurementName,
+        public array $query,
+        public AbstractSearchBuilder $builder,
         /**
          * @var array<TracerContract>
          */
-        public readonly array $tracers,
-        public readonly FutureArrayInterface $result,
+        public array $tracers,
+        public FutureArrayInterface $result,
     ) {
     }
 }

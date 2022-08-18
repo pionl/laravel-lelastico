@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(SetList::PSR_12);
-    $containerConfigurator->import(SetList::SYMPLIFY);
-    $containerConfigurator->import(SetList::COMMON);
-    $containerConfigurator->import(SetList::CLEAN_CODE);
+return static function (ECSConfig $config): void {
+    $config->import(SetList::PSR_12);
+    $config->import(SetList::SYMPLIFY);
+    $config->import(SetList::COMMON);
+    $config->import(SetList::CLEAN_CODE);
 
-    $parameters = $containerConfigurator->parameters();
+    $parameters = $config->parameters();
 
     $parameters->set(Option::PARALLEL, true);
 
