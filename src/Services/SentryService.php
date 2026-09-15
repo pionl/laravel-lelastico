@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Lelastico\Services;
 
 use Sentry\Laravel\Integration;
+use Sentry\SentrySdk;
 use Sentry\Tracing\Span;
 use Sentry\Tracing\SpanContext;
 
@@ -17,7 +18,7 @@ class SentryService
 
     public function getCurrentTracingSpan(): ?Span
     {
-        return Integration::currentTracingSpan();
+        return SentrySdk::getCurrentHub()->getSpan();
     }
 
     public function createSpan(): SpanContext

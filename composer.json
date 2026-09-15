@@ -1,5 +1,6 @@
 {
   "name": "pion/laravel-lelastico",
+  "description": "Laravel integration for Elasticsearch.",
   "license": "MIT",
   "authors": [
     {
@@ -9,25 +10,24 @@
   ],
   "require": {
     "php": ">=8.1",
-    "illuminate/support": ">=5.5",
-    "illuminate/http": ">=5.5",
-    "illuminate/pagination": ">=5.5",
-    "illuminate/console": ">=5.5",
+    "illuminate/support": "^10.0",
+    "illuminate/http": "^10.0",
+    "illuminate/pagination": "^10.0",
+    "illuminate/console": "^10.0",
     "elasticsearch/elasticsearch": "^7.17",
     "erichard/elasticsearch-query-builder": "3.0.0-beta",
-    "illuminate/validation": ">=5.5"
+    "illuminate/validation": "^10.0"
   },
   "require-dev": {
-    "nunomaduro/larastan": "^1.0.3",
-    "orchestra/testbench": "^7.1",
-    "phpstan/phpdoc-parser": "^1.2",
+    "nunomaduro/larastan": "^2.6",
+    "orchestra/testbench": "^8.0",
     "phpstan/phpstan": "^1.4",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "phpstan/phpstan-mockery": "^1.0",
     "phpstan/phpstan-phpunit": "^1.0",
-    "phpunit/phpunit": "^9.5.13",
+    "phpunit/phpunit": "^10.0",
     "rector/rector": "^0.12.17",
-    "sentry/sentry-laravel": "^2.11",
+    "sentry/sentry-laravel": "^3.0",
     "symplify/easy-coding-standard": "^10.1"
   },
   "suggest": {
@@ -38,13 +38,18 @@
       "Lelastico\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Lelastico\\Tests\\": "tests/"
+    }
+  },
   "scripts": {
     "lint:fix": "./vendor/bin/ecs --fix",
     "lint:stan": "./vendor/bin/phpstan",
     "lint:upgrade": "vendor/bin/rector process",
     "lint:md": "vendor/bin/ecs check-markdown README.md CHANGELOG.md CODE_OF_CONDUCT.md LICENSE.md",
     "lint": "composer lint:upgrade && composer lint:fix && composer lint:stan && composer lint:md",
-    "test": "./vendor/bin/phpunit"
+    "test": "./vendor/bin/phpunit tests"
   },
   "extra": {
     "laravel": {
