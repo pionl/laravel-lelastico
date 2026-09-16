@@ -19,7 +19,7 @@ trait WorksWithDocuments
      *
      * @param Closure(array,float): void|null $onSent Receives response and time
      */
-    public function bulkWrite(Closure $onSent = null): BulkWrite
+    public function bulkWrite(?Closure $onSent = null): BulkWrite
     {
         return new BulkWrite($this, $this->client, $onSent);
     }
