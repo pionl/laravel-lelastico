@@ -10,25 +10,25 @@
   ],
   "require": {
     "php": ">=8.1",
-    "illuminate/support": "^10.0 || ^11.0",
-    "illuminate/http": "^10.0 || ^11.0",
-    "illuminate/pagination": "^10.0 || ^11.0",
-    "illuminate/console": "^10.0 || ^11.0",
+    "illuminate/support": "^12.0",
+    "illuminate/http": "^12.0",
+    "illuminate/pagination": "^12.0",
+    "illuminate/console": "^12.0",
     "elasticsearch/elasticsearch": "^7.17",
     "erichard/elasticsearch-query-builder": "3.0.0-beta",
-    "illuminate/validation": "^10.0 || ^11.0"
+    "illuminate/validation": "^12.0"
   },
   "require-dev": {
-    "nunomaduro/larastan": "^2.6",
-    "orchestra/testbench": "^8.0 || ^9.0",
-    "phpstan/phpstan": "^1.4",
-    "phpstan/phpstan-deprecation-rules": "^1.0",
-    "phpstan/phpstan-mockery": "^1.0",
-    "phpstan/phpstan-phpunit": "^1.0",
-    "phpunit/phpunit": "^10.0",
-    "rector/rector": "^0.12.17",
+    "larastan/larastan": "^3.0",
+    "orchestra/testbench": "^8.0 || ^9.0 || ^10.0",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-deprecation-rules": "^2.0",
+    "phpstan/phpstan-mockery": "^2.0",
+    "phpstan/phpstan-phpunit": "^2.0",
+    "phpunit/phpunit": "^11.0",
+    "rector/rector": "^2.0",
     "sentry/sentry-laravel": "^3.0 || ^4.3",
-    "symplify/easy-coding-standard": "^10.1"
+    "symplify/easy-coding-standard": "^13.0"
   },
   "suggest": {
     "sentry/sentry-laravel": "For tracking metrics of your elastic queries. Automatically tracked."
