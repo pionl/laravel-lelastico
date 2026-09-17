@@ -25,7 +25,7 @@ class RequestFilter extends AbstractFilter
         public string $requestKey,
         public Closure $createQuery
     ) {
-        $this->value = $this->convertValue($request->get($requestKey));
+        $this->value = $this->convertValue($request->input($requestKey));
     }
 
     public function createQuery(): AbstractQuery

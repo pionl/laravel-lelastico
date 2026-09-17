@@ -17,8 +17,9 @@ class Filters
      */
     protected array $filters = [];
 
-    public function __construct(protected Request $request)
-    {
+    public function __construct(
+        protected Request $request
+    ) {
     }
 
     /**
@@ -66,13 +67,13 @@ class Filters
         }
 
         // Setup current page
-        $page = $this->request->get('page');
+        $page = $this->request->input('page');
         if (is_numeric($page) && $page > 0) {
             $builder->setCurrentPage((int) $page);
         }
 
         // Setup per_page page
-        $perPage = $this->request->get('per_page');
+        $perPage = $this->request->input('per_page');
         if (is_numeric($perPage) && $perPage > 0 && $perPage <= 100) {
             $builder->setPerPage((int) $perPage);
         }

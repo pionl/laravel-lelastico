@@ -19,6 +19,7 @@ Focus of this library is to make it easier to manage elastic indices (wit mappin
 
 - Composer
 - PHP 8.1
+- Laravel 12 or 13. Laravel 13 requires PHP 8.3 or newer.
 
 ## Installation
 

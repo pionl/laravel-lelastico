@@ -13,7 +13,7 @@ use Lelastico\Search\Query\GivenFiltersQuery;
  */
 class BoolFilter extends RequestFilter
 {
-    public function __construct(Request $request, string $requestKey, string $fieldName = null)
+    public function __construct(Request $request, string $requestKey, ?string $fieldName = null)
     {
         $fieldName = is_string($fieldName) ? $fieldName : $requestKey;
         parent::__construct($request, $requestKey, fn ($value) => new GivenFiltersQuery([

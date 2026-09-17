@@ -1,3 +1,10 @@
+# Unreleased
+
+## Compatibility
+
+- Add Laravel 13, Testbench 11, PHPUnit 12, and PHP 8.5 test support.
+- Use the Laravel request input API for request-backed filters.
+
 # v0.3
 
 ## New features
