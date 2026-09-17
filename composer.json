@@ -1,5 +1,6 @@
 {
   "name": "pion/laravel-lelastico",
+  "description": "Laravel integration for Elasticsearch.",
   "license": "MIT",
   "authors": [
     {
@@ -8,28 +9,47 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
-    "illuminate/support": ">=5.5",
-    "illuminate/http": ">=5.5",
-    "illuminate/pagination": ">=5.5",
-    "illuminate/console": ">=5.5",
+    "php": ">=8.1",
+    "illuminate/support": "^12.0 || ^13.0",
+    "illuminate/http": "^12.0 || ^13.0",
+    "illuminate/pagination": "^12.0 || ^13.0",
+    "illuminate/console": "^12.0 || ^13.0",
     "elasticsearch/elasticsearch": "^7.17",
-    "erichard/elasticsearch-query-builder": "dev-collapse-and-improvments#9efe1b3a4491b8ca21b077d4d38ec8d53eeadd33",
-    "illuminate/validation": ">=5.5"
+    "erichard/elasticsearch-query-builder": "3.0.0-beta",
+    "illuminate/validation": "^12.0 || ^13.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^2.16",
-    "overtrue/phplint": "^1.2"
+    "larastan/larastan": "^3.0",
+    "orchestra/testbench": "^10.0 || ^11.0",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-deprecation-rules": "^2.0",
+    "phpstan/phpstan-mockery": "^2.0",
+    "phpstan/phpstan-phpunit": "^2.0",
+    "phpunit/phpunit": "^11.0 || ^12.0",
+    "rector/rector": "^2.0",
+    "sentry/sentry-laravel": "^4.3 || ^5.0",
+    "symplify/easy-coding-standard": "^13.0"
+  },
+  "suggest": {
+    "sentry/sentry-laravel": "For tracking metrics of your elastic queries. Automatically tracked."
   },
   "autoload": {
     "psr-4": {
       "Lelastico\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Lelastico\\Tests\\": "tests/"
+    }
+  },
   "scripts": {
-    "lint:fix": "./vendor/bin/php-cs-fixer fix --config=.php_cs --using-cache false",
-    "lint:check": "./vendor/bin/phplint",
-    "lint": "composer run-script lint:fix && composer run-script lint:check"
+    "lint:fix": "./vendor/bin/ecs --fix",
+    "lint:stan": "./vendor/bin/phpstan",
+    "lint:upgrade": "vendor/bin/rector process",
+    "lint:md": "vendor/bin/ecs check-markdown README.md CHANGELOG.md CODE_OF_CONDUCT.md LICENSE.md",
+    "lint": "composer lint:upgrade && composer lint:fix && composer lint:stan && composer lint:md",
+    "test": "./vendor/bin/phpunit tests"
   },
   "extra": {
     "laravel": {
@@ -38,10 +58,11 @@
       ]
     }
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/pionl/elasticsearch-query-builder.git"
-    }
-  ]
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
 }

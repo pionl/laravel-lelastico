@@ -1,33 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Search\Query;
 
-use Erichard\ElasticQueryBuilder\Filter\Filter;
+use Erichard\ElasticQueryBuilder\Contracts\QueryInterface;
 
 abstract class AbstractQuery
 {
     /**
      * Adds the query filter to must not filter in elastic search.
-     *
-     * @var bool
      */
-    public $scoring = false;
+    public bool $scoring = false;
 
-    /**
-     * Creates elastic query filters.
-     *
-     * @return Filter[]
-     */
-    abstract public function createFilters(): array;
+    abstract public function createQuery(): ?QueryInterface;
 
     /**
      * Does filter counts to scoring?
-     *
-     * @param bool $scoring
-     *
-     * @return AbstractQuery
      */
-    public function setScoring(bool $scoring): AbstractQuery
+    public function setScoring(bool $scoring): self
     {
         $this->scoring = $scoring;
 
