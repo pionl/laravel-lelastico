@@ -1,11 +1,10 @@
-# Unreleased
+# v0.3
 
 ## Compatibility
 
-- Add Laravel 13, Testbench 11, PHPUnit 12, and PHP 8.5 test support.
+- Add Laravel 10, 11, 12, and 13 support.
+- Add Testbench 11, PHPUnit 12, and PHP 8.5 test support.
 - Use the Laravel request input API for request-backed filters.
-
-# v0.3
 
 ## New features
 
@@ -68,23 +67,4 @@ Options:
   -f, --force                 will delete the index and data and creates a new index.
   -d, --delete                will delete the index and data
   -s, --skip-settings-update  Do not not update settings to prevent index close / open.
-```
-
-# TODO
-
-- sort
-- rewrite "request"
-- rename convention query to something else because of the package naming convention change
-
-```
-
-    /**
-     * @var array<string, string>
-     */
-    private array $availableTraits;
-   // Add sort if enabled
-        $this->availableTraits = class_uses($this) ?? [];
-        // TODO move out
-        $this->hasSorting = array_key_exists(HasSorting::class, $this->availableTraits);
-        $this->index = $this->dependencies->container->make($this->getIndexClass());
 ```
