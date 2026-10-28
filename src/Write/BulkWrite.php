@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lelastico\Write;
 
+use Closure;
 use Elasticsearch\Client;
 use Lelastico\Indices\AbstractElasticIndex;
 
@@ -10,75 +13,50 @@ use Lelastico\Indices\AbstractElasticIndex;
  */
 class BulkWrite
 {
-    /**
-     * @var float|string
-     */
-    protected $startTime;
+    public int $documentsCount = 0;
 
-    /**
-     * @var AbstractElasticIndex
-     */
-    private $index;
+    protected float $startTime;
 
-    private $documents = [];
+    private array $documents = [];
 
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var int
-     */
-    public $documentsCount = 0;
-
-    /**
-     * Sends a chunk of documents when document is added.
-     *
-     * @var int
-     */
-    public $chunkSize = 500;
-    /**
-     * @var callable|null
-     */
-    private $onSent;
-
-    /**
-     * Wait for refresh.
-     *
-     * @var bool
-     */
-    public $refresh = false;
-
-    /**
-     * BulkWrite constructor.
-     *
-     * @param AbstractElasticIndex $index
-     * @param Client               $client
-     * @param callable|null        $onSent Called when documents are sent. Receives response and start time for measuring
-     *                                     how long it took to build 1 chunk.
-     */
-    public function __construct(AbstractElasticIndex $index, Client $client, callable $onSent = null)
-    {
-        $this->index = $index;
-        $this->client = $client;
-        $this->onSent = $onSent;
+    public function __construct(
+        private AbstractElasticIndex $index,
+        private Client $client,
+        /**
+         * Receives response and time
+         *
+         * @var Closure<array, float)|null
+         */
+        private Closure|null $onSent = null,
+        /**
+         * Called when documents are sent. Receives response and start time for measuring how long it took to build 1
+         * chunk.
+         */
+        public bool $refresh = true,
+        /**
+         * Sends a chunk of documents when document is added.
+         */
+        public int $chunkSize = 500,
+    ) {
         $this->startTime = microtime(true);
     }
 
     /**
      * Adds new document and sends a chunk of documents if needed.
      *
-     * @param array  $document
-     * @param string $id
-     *
      * @return $this
      */
-    public function addDocument(array $document, string $id)
+    public function addDocument(array $document, string $id): self
     {
         ++$this->documentsCount;
         // Add the document data with index / id mapping.
-        $this->documents[] = ['index' => ['_index' => $this->index->name, '_id' => $id]];
+        $this->documents[] = [
+            'index' => [
+                '_index' => $this->index->name,
+                '_id' => $id,
+
+            ],
+        ];
         $this->documents[] = $document;
 
         // Sent a chunk of the documents (1 document === 2 entries in array)
@@ -92,17 +70,15 @@ class BulkWrite
     /**
      * Finishes the bulk write (sends the reset of the documents).
      */
-    public function finish()
+    public function finish(): void
     {
-        if (count($this->documents) > 0) {
+        if ($this->documents !== []) {
             $this->sendDocuments();
         }
     }
 
     /**
      * Sends the current documents and resets them.
-     *
-     * @return array
      */
     protected function sendDocuments(): array
     {
@@ -112,7 +88,7 @@ class BulkWrite
             'refresh' => $this->refresh,
         ]);
 
-        if (null !== $this->onSent) {
+        if ($this->onSent !== null) {
             call_user_func($this->onSent, $response, $this->startTime);
         }
 
